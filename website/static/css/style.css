@@ -1499,6 +1499,18 @@ header nav ul li:last-of-type {
           justify-content: center;
 }
 
+.test {
+  margin-top: 40px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+
+
 /* line 101, scss/modules/homepage-sections/_help.scss */
 .help--slides-pagination li {
   margin: 0 8px;

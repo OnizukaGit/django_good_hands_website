@@ -14,9 +14,13 @@ class LandingPage(View):
         categories = Category.objects.all()
         institution_quantity = Donation.objects.values_list('quantity', flat=True)
         total_quantity = Donation.objects.aggregate(total=Sum('quantity'))['total']
-        p = Paginator(Institution.objects.all(), 2)
+        one = Paginator(Institution.objects.filter(type="0"), 2)
+        two = Paginator(Institution.objects.filter(type="1"), 2)
+        three = Paginator(Institution.objects.filter(type="2"), 2)
         page = request.GET.get('page')
-        institution_page = p.get_page(page)
+        institution_page_one = one.get_page(page)
+        institution_page_two = two.get_page(page)
+        institution_page_three = three.get_page(page)
         return render(request, "website/index.html", context={
             "institution": institution,
             "organizations": organizations,
@@ -24,7 +28,9 @@ class LandingPage(View):
             "categories": categories,
             "institution_quantity": institution_quantity,
             "total_quantity": total_quantity,
-            "institution_page": institution_page,
+            "institution_page_one": institution_page_one,
+            "institution_page_two" : institution_page_two,
+            "institution_page_three" : institution_page_three,
         })
 
 

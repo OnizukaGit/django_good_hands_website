@@ -94,11 +94,41 @@
       </ul>
 
       <!-- SLIDE 1 -->
-      <div class="help--slides active" data-id="1">
+               <div class="help--slides active" data-id="1">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
 
           <ul class="help--slides-items">
-          {% for inst in institution_page %}
+          {% for inst in institution_page_one %}
+              <li>
+            <div class="col">
+              <div class="title">{{ inst.name }}</div>
+              <div class="subtitle">Cel i misja: {{ inst.description }}</div>
+            </div>
+
+            <div class="col"><div class="text">{% for category in inst.categories.all %}{{ category.name }}, {% endfor %}</div></div>
+          </li>
+          {% endfor %}
+          </ul>
+<ul class="help--slides-pagination">
+  {% if institution_page_one.has_other_pages %}
+    {% for i in institution_page_one.paginator.page_range %}
+      {% if institution_page_one.number == i %}
+        <a href="?page={{ i }}" class="btn btn--small btn--without-border active">{{ i }}</a>
+      {% else %}
+        <a href="?page={{ i }}" class="btn btn--small btn--without-border">{{ i }}</a>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+</ul>
+      </div>
+
+
+      <!-- SLIDE 2 -->
+               <div class="help--slides " data-id="2">
+        <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
+
+          <ul class="help--slides-items">
+          {% for inst in institution_page_two %}
               <li>
             <div class="col">
               <div class="title">{{ inst.name }}</div>
@@ -110,71 +140,48 @@
           {% endfor %}
           </ul>
 
-{#        <ul class="help--slides-pagination">#}
-{#          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>#}
-{#          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>#}
-{#          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>#}
-{#        </ul>#}
-            {% if institution_page.has_previous %}
-            <a href="?page=1">&laquo First</a>
-            <a href="?page={{institution_page.previous_page_number }}">Poprzednia strona</a>
-            {% endif %}
-            Page {{ institution_page.number }} of {{ institution_page.paginator_num_pages }}
-            {% if institution_page.has_next %}
-            <a href="?page={{ institution_page.next_page_number }}">next</a>
-
-            <a href="?page={{ institution_page.paginator.num_pages }}"> Last &raquo;</a>
-            {% endif %}
-
-      </div>
-
-
-
-      <!-- SLIDE 2 -->
-      <div class="help--slides" data-id="2">
-        <p>
-            W naszej bazie znajdziesz listę zweryfikowanych organizacji pozarządowych, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.
-        </p>
-
-          <ul class="help--slides-items">
-          {% for organization in organizations %}
-              <li>
-            <div class="col">
-              <div class="title">{{ organization.name }}</div>
-              <div class="subtitle">{{ organization.description }}</div>
-            </div>
-
-            <div class="col"><div class="text">{% for category in organization.categories.all %}
-            {{ category.name }}, {% endfor %}</div></div>
-          </li>
-          {% endfor %}
-        </ul>
-
-        <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="4">4</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="5">5</a></li>
-        </ul>
-
+<ul class="help--slides-pagination">
+  {% if institution_page_one.has_other_pages %}
+    {% for i in institution_page_one.paginator.page_range %}
+      {% if institution_page_one.number == i %}
+        <a href="?page={{ i }}" class="btn btn--small btn--without-border active">{{ i }}</a>
+      {% else %}
+        <a href="?page={{ i }}" class="btn btn--small btn--without-border">{{ i }}</a>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+</ul>
       </div>
 
       <!-- SLIDE 3 -->
-      <div class="help--slides" data-id="3">
-        <p>W naszej bazie znajdziesz listę zweryfikowanych organizowanych zbiórek lokalnych, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
-        <ul class="help--slides-items">
-          {% for loc in local %}
-            <li>
+               <div class="help--slides" data-id="3">
+        <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
+
+          <ul class="help--slides-items">
+          {% for inst in institution_page_three %}
+              <li>
             <div class="col">
-              <div class="title">{{ loc.name }}</div>
-              <div class="subtitle">{{ loc.description }}</div>
+              <div class="title">{{ inst.name }}</div>
+              <div class="subtitle">Cel i misja: {{ inst.description }}</div>
             </div>
 
-            <div class="col"><div class="text">{% for category in loc.categories.all %}
-            {{ category.name }}, {% endfor %}</div></div>
+            <div class="col"><div class="text">{% for category in inst.categories.all %}{{ category.name }}, {% endfor %}</div></div>
           </li>
-        {% endfor %}
+          {% endfor %}
+          </ul>
+
+<ul class="help--slides-pagination">
+  {% if institution_page_one.has_other_pages %}
+    {% for i in institution_page_one.paginator.page_range %}
+      {% if institution_page_one.number == i %}
+        <a href="?page={{ i }}" class="btn btn--small btn--without-border active">{{ i }}</a>
+      {% else %}
+        <a href="?page={{ i }}" class="btn btn--small btn--without-border">{{ i }}</a>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+</ul>
+
       </div>
     </section>
 
