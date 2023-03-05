@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.views import View
+from django.views.generic import CreateView
 from website.models import Donation, Institution, Category
 from django.db.models import Sum
 from django.core.paginator import Paginator
-
-
+from django.urls import reverse_lazy
+from website.forms import RegisterForms
 
 class LandingPage(View):
     def get(self, request):
@@ -34,8 +35,6 @@ class LandingPage(View):
         })
 
 
-
-
 class AddDonation(View):
     def get(self, request):
         return render(request, "website/form.html")
@@ -51,6 +50,9 @@ class Login(View):
         return render(request, "website/login.html")
 
 
-class Register(View):
-    def get(self, request):
-        return render(request, "website/register.html")
+class Register(CreateView):
+    template_name = "website/register.html"
+    form_class = RegisterForms
+    success_url = reverse_lazy("login")
+
+
