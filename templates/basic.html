@@ -13,10 +13,23 @@
 
         <header class="header--main-page">
       <nav class="container container--70">
-        <ul class="nav--actions">
-          <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a></li>
+
+{#{% if user.is_authenticated %}#}
+                   <li class="logged-user">
+            Witaj {{ user }}
+            <ul class="dropdown">
+              <li><a href="#">Profil</a></li>
+              <li><a href="#">Ustawienia</a></li>
+              <li><a href="{% url 'logout' %}">Wyloguj</a></li>
+            </ul>
+          </li>
+            <ul class="nav--actions">
+          <li><a href="{% url 'login' %}#login" class="btn btn--small btn--without-border">Zaloguj</a></li>
           <li><a href="{% url 'register' %}#register" class="btn btn--small btn--highlighted">Załóż konto</a></li>
         </ul>
+{#    {{ else }}#}
+{##}
+{#        {% endif %}#}
 
         <ul>
           <li><a href="{% url 'index' %}" class="btn btn--without-border active">Start</a></li>

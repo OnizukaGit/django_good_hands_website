@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 
 
 class Category(models.Model):
@@ -53,9 +54,3 @@ class Donation(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
 
-class Users(AbstractUser):
-    email = models.EmailField(unique=True)
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
-    groups = models.ManyToManyField("auth.Group", blank=True, related_name="user_groups")
-    user_permissions = models.ManyToManyField("auth.Permission", blank=True, related_name="user_permissions")
