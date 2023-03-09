@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 
@@ -7,48 +7,42 @@ from django.contrib.auth.forms import UserCreationForm
 User = get_user_model()
 
 
-class RegisterForm(forms.ModelForm):
-    pass1 = forms.CharField(label="Hasło", widget=forms.PasswordInput)
-    pass2 = forms.CharField(label="Powtórz hasło", widget=forms.PasswordInput)
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(max_length=64)
+    password1 = forms.CharField(widget=forms.PasswordInput, label="Hasło")
+    password2 = forms.CharField(widget=forms.PasswordInput, label="Powtórz hasło")
 
     class Meta:
         model = User
-        fields = (
+        fields = [
             'first_name',
             'last_name',
-            'username',
             'email',
-        )
-        help_texts = {
-            'username': 'Tym będziesz się logował',
+            'password1',
+            'password2',
+        ]
+        labels = {
+            'first_name': 'Imię',
+            'last_name': 'Nazwisko',
+            'email': 'Email',
+
         }
 
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError("Ta nazwa użytkownika już istnieje")
-        return username
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Ten mail jest już w bazie")
+        return email
 
-    def clean(self):
-        cd = super().clean()
-        pass1 = cd.get('pass1')
-        pass2 = cd.get('pass2')
-        if len(pass1) < 4:
-            raise forms.ValidationError('Hasło musi mieć więcej niż 4 litery!')
-        if pass1 != pass2:
-            raise forms.ValidationError('Hasło musi być takie same')
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data['email']
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+        return user
 
 
-class LoginForm(forms.Form):
-    username = forms.CharField(label="Nazwa użytkownika")
-    password1 = forms.CharField(label="Hasło", widget=forms.PasswordInput)
-
-    def clean(self):
-        cd = super().clean()
-
-        username = cd.get('username')
-        password1 = cd.get('password1')
-        user = authenticate(username=username, password=password1)
-
-        if user is None:
-            raise forms.ValidationError("Złe podane hasło lub login")
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label="Nazwa użytkownika", max_length=254)
+    password = forms.CharField(label="Hasło", widget=forms.PasswordInput)

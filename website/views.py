@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import CreateView, FormView, RedirectView
+from django.views.generic import CreateView, RedirectView
 from website.models import Donation, Institution, Category
 from django.db.models import Sum
 from django.core.paginator import Paginator
 from django.urls import reverse_lazy
 from website.forms import RegisterForm, LoginForm
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 
 
@@ -48,17 +48,17 @@ class FormConfirmation(View):
         return render(request, "website/form-confirmation.html")
 
 
-class Login(FormView):
+class Login(LoginView):
+    redirect_authenticated_user = True
     template_name = 'website/login.html'
-    success_url = reverse_lazy('index')
     form_class = LoginForm
 
+    def get_success_url(self):
+        return reverse_lazy('index')
+
     def form_valid(self, form):
-        password1 = form.cleaned_data['password1']
-        username = form.cleaned_data['username']
-        user = authenticate(password=password1, username=username)
-        login(self.request, user)
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        return response
 
 
 class Logout(RedirectView):
@@ -77,7 +77,7 @@ class Register(CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         cd = form.cleaned_data
-        self.object.set_password(cd['pass1'])
+        self.object.set_password(cd['password1'])
         self.object.save()
         return response
 
