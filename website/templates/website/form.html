@@ -32,13 +32,14 @@
 
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
-
         <form action="form-confirmation.html" method="post">
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
-
-            <div class="form-group form-group--checkbox">
+          <script>
+              
+          </script>
+            <div class="form-group form-group--checkbox" id="category-checkbox">
                 {% for cat in category %}
               <label>
                 <input
@@ -71,7 +72,7 @@
 
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
-              <button type="button" class="btn next-step">Dalej</button>
+              <button  onclick="filtercategory()" type="button" class="btn next-step">Dalej</button>
             </div>
           </div>
 
@@ -82,7 +83,7 @@
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
               {% for inst in institution %}
             <div class="form-group form-group--checkbox" data-category="{{ inst.categories.pk }}">
-              <label>
+              <label name="organization-name">
                 <input type="radio" name="organization" value="{{ inst.pk }}" />
                 <span class="checkbox radio"></span>
                 <span class="description">
@@ -208,6 +209,43 @@
         </form>
       </div>
     </section>
+            <script>
+          const chosencategory = {}
+
+          const category = Array.from(document.getElementById("category-checkbox").children)
+          category.map((label) =>{
+            // console.log(label.children[0])
+
+          const input = label.children[0]
+          input.addEventListener("change", (event) => {
+          
+          const eventtarget =  event.target.value
+          
+          if (chosencategory[eventtarget]){
+                    // chosencategory[eventtarget] = undefined
+                    delete chosencategory[eventtarget]
+
+
+          }
+          else{
+                    chosencategory[eventtarget] = eventtarget
+          }
+          
+          // console.log(chosencategory)
+})
+                    
+})
+function filtercategory(){
+          const categoryvalue = Object.keys(chosencategory)
+          
+        const origanization = Array.from(document.getElementsByName('organization-name'))
+          console.log("origanization",origanization)
+
+        origanization.map((o) => {
+                  o.style.display = "flex";
+        })
+}
+</script>
 {% endblock %}
   </body>
 </html>
