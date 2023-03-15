@@ -40,9 +40,9 @@ class LandingPage(View):
 
 class AddDonation(View):
     def get(self, request):
-        category = Category.objects.all()
-        institution = Institution.objects.all()
-        return render(request, "website/form.html", context={"category": category, "institution": institution})
+        categories = Category.objects.all()
+        institutions = Institution.objects.all()
+        return render(request, "website/form.html", context={"categories": categories, "institutions": institutions})
 
 
 class FormConfirmation(View):
