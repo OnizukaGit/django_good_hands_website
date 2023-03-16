@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'website.apps.WebsiteConfig',
     'good_hands_website',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

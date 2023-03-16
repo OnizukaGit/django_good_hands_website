@@ -8,6 +8,8 @@ from django.urls import reverse_lazy
 from website.forms import RegisterForm, LoginForm
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
+from rest_framework import generics
+from .serializers import DonationSerializer, CategorySerializer, InstitutionSerializer
 
 
 class LandingPage(View):
@@ -36,6 +38,21 @@ class LandingPage(View):
             "institution_page_two" : institution_page_two,
             "institution_page_three" : institution_page_three,
         })
+
+
+class CategoriesView(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class InstitutionView(generics.ListCreateAPIView):
+    queryset = Institution.objects.all()
+    serializer_class = InstitutionSerializer
+
+
+class DonationView(generics.ListCreateAPIView):
+    queryset = Donation.objects.all()
+    serializer_class = DonationSerializer
 
 
 class AddDonation(View):
