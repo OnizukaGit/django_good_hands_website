@@ -34,16 +34,9 @@
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
         <form action="form-confirmation.html" method="post">
             <!-- STEP 1: class .active is switching steps -->
-            <div data-step="1" class="active">
+            <div data-step="1">
               <h3>Zaznacz co chcesz oddać:</h3>
               <div class="form-group form-group--checkbox" id="category-checkbox">
-                {% for category in categories %}
-                  <label>
-                    <input type="radio" name="category" value="{{ category.pk }}" />
-                    <span class="checkbox"></span>
-                    <span class="description">{{ category.name }}</span>
-                  </label>
-                {% endfor %}
               </div>
               <div class="form-group form-group--buttons">
                 <button type="button" class="btn next-step">Dalej</button>
@@ -61,27 +54,15 @@
               </div>
               <div class="form-group form-group--buttons">
                 <button type="button" class="btn prev-step">Wstecz</button>
-                <button onclick="filtercategory()" type="button" class="btn next-step">Dalej</button>
+                <button type="button" class="btn next-step">Dalej</button>
               </div>
             </div>
 
           <!-- STEP 3 -->
           <div data-step="3">
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
-              {% for inst in institution %}
-            <div class="form-group form-group--checkbox" data-category="{{ inst.categories.pk }}">
-              <label name="organization-name">
-                <input type="radio" name="organization" value="{{ inst.pk }}" />
-                <span class="checkbox radio"></span>
-                <span class="description">
-                  <div class="title">{{ inst.name }}”</div>
-                  <div class="subtitle">
-                    {{ inst.description }}
-                  </div>
-                </span>
-              </label>
+            <div class="form-group form-group--checkbox" id="institution-checkbox">
             </div>
-            {% endfor %}
               <div class="form-group form-group--buttons">
                 <button type="button" class="btn prev-step">Wstecz</button>
                 <button type="button" class="btn next-step">Dalej</button>
@@ -194,43 +175,44 @@
         </form>
       </div>
     </section>
-            <script>
-          const chosencategory = {}
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-          const category = Array.from(document.getElementById("category-checkbox").children)
-          category.map((label) =>{
-            // console.log(label.children[0])
+        <script>
+        $.ajax({
+            url: '/categories/1',
+            dataType : 'json',
+            success : function (data){
+                var categories = '';
+                $.each(data, function(index, element) {
+                    categories += '<label>';
+                    categories += '<input type="radio" name="category" value="' + element.id + '">';
+                    categories += '<span class="checkbox"></span>';
+                    categories += '<span class="description">' + element.name + '</span>';
+                    categories += '</label><br>';
+                });
+                $('#category-checkbox').html(categories);
+            }
+        });
 
-          const input = label.children[0]
-          input.addEventListener("change", (event) => {
-
-          const eventtarget =  event.target.value
-
-          if (chosencategory[eventtarget]){
-                    // chosencategory[eventtarget] = undefined
-                    delete chosencategory[eventtarget]
-
-
-          }
-          else{
-                    chosencategory[eventtarget] = eventtarget
-          }
-
-          console.log(chosencategory)
-})
-
-})
-function filtercategory(){
-          const categoryvalue = Object.keys(chosencategory)
-
-        const origanization = Array.from(document.getElementsByName('organization-name'))
-          console.log("origanization",origanization)
-
-        origanization.map((o) => {
-                  o.style.display = "flex";
-        })
-}
-</script>
+        $.ajax({
+            url: '/institution/1',
+            dataType: 'json',
+            success : function (data){
+                var institution = '';
+                $.each(data, function (index, element){
+                    institution += '<label>';
+                    institution += '<input type="radio" name="institution" value="' + element.id +'">';
+                    institution += '<span class="checkbox radio"></span>';
+                    institution += '<span class="description">';
+                    institution += '<div class="title">' + element.name + '</div>';
+                    institution += '<div class="subtitle">' + element.description + '</div>';
+                    institution += '</span>';
+                    institution += '</label>';
+                });
+                $('#institution-checkbox').html(institution);
+            }
+        });
+        </script>
 {% endblock %}
   </body>
 </html>
