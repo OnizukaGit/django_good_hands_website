@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import CreateView, RedirectView
+from django.views.generic import CreateView, RedirectView, ListView
 from website.models import Donation, Institution, Category
 from django.db.models import Sum
 from django.core.paginator import Paginator
@@ -10,6 +10,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from rest_framework import generics
 from .serializers import DonationSerializer, CategorySerializer, InstitutionSerializer
+from django.contrib.auth.models import User
 
 
 class LandingPage(View):
@@ -53,6 +54,16 @@ class InstitutionView(generics.ListCreateAPIView):
 class DonationView(generics.ListCreateAPIView):
     queryset = Donation.objects.all()
     serializer_class = DonationSerializer
+
+
+class UserPanel(ListView):
+    template_name = 'website/my_profile.html'
+    model = User
+    context_object_name = "users"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(username=self.request.user.username)
 
 
 class AddDonation(View):
@@ -101,5 +112,7 @@ class Register(CreateView):
         return response
 
 
-
+class MyProfile(View):
+    def get(self, request):
+        return render(request, 'website/my_profile.html')
 

@@ -1,5 +1,6 @@
 from .models import Institution, Donation, Category
 from rest_framework import serializers
+from django.contrib.auth.models import User
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
@@ -18,3 +19,5 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ("id", "name")
+
+

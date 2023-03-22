@@ -14,16 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from website.views import LandingPage, AddDonation, FormConfirmation, Login, Register,\
-                            Logout, CategoriesView, DonationView, InstitutionView
+                            Logout, CategoriesView, DonationView, InstitutionView, UserPanel
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPage.as_view(), name="index"),
     path('form/', AddDonation.as_view(), name="form"),
     path('form-confirmation', FormConfirmation.as_view(), name="form-confirmation"),
-
+    path('profile/', UserPanel.as_view(), name="UsersPanel"),
 
     path('register/', Register.as_view(), name="register"),
     path('login/', Login.as_view(), name="login"),
@@ -33,5 +33,4 @@ urlpatterns = [
     path('categories/<int:pk>', CategoriesView.as_view(), name="category-serializer"),
     path('donation/<int:pk>', DonationView.as_view(), name="category-serializer"),
     path('institution/<int:pk>', InstitutionView.as_view(), name="category-serializer"),
-
 ]
