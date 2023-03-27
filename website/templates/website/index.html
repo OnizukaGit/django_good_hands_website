@@ -63,13 +63,13 @@
       <h2>Komu pomagamy?</h2>
 
       <ul class="help--buttons">
-        <li data-id="1"><a href="#" class="btn btn--without-border active">Fundacje</a></li>
+        <li id="help_one" data-id="1"><a href="#" class="btn btn--without-border active">Fundacje</a></li>
         <li data-id="2"><a href="#" class="btn btn--without-border">Organizacjom pozarządowym</a></li>
         <li data-id="3"><a href="#" class="btn btn--without-border">Lokalnym zbiórkom</a></li>
       </ul>
 
       <!-- SLIDE 1 -->
-               <div class="help--slides active" data-id="1">
+               <div id="help_one" class="help--slides active" data-id="1">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
 
           <ul class="help--slides-items">
@@ -99,7 +99,7 @@
 
 
       <!-- SLIDE 2 -->
-               <div class="help--slides " data-id="2">
+               <div id="help_two" class="help--slides " data-id="2">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
 
           <ul class="help--slides-items">
@@ -116,9 +116,9 @@
           </ul>
 
             <ul class="help--slides-pagination">
-              {% if institution_page_one.has_other_pages %}
-                {% for i in institution_page_one.paginator.page_range %}
-                  {% if institution_page_one.number == i %}
+              {% if institution_page_two.has_other_pages %}
+                {% for i in institution_page_two.paginator.page_range %}
+                  {% if institution_page_two.number == i %}
                     <a href="?page={{ i }}" class="btn btn--small btn--without-border active">{{ i }}</a>
                   {% else %}
                     <a href="?page={{ i }}" class="btn btn--small btn--without-border">{{ i }}</a>
@@ -132,7 +132,7 @@
                <div class="help--slides" data-id="3">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
 
-          <ul class="help--slides-items">
+          <ul class="help--slides-items" >
           {% for inst in institution_page_three %}
               <li>
             <div class="col">
@@ -146,9 +146,9 @@
           </ul>
 
             <ul class="help--slides-pagination">
-              {% if institution_page_one.has_other_pages %}
-                {% for i in institution_page_one.paginator.page_range %}
-                  {% if institution_page_one.number == i %}
+              {% if institution_page_three.has_other_pages %}
+                {% for i in institution_page_three.paginator.page_range %}
+                  {% if institution_page_three.number == i %}
                     <a href="?page={{ i }}" class="btn btn--small btn--without-border active">{{ i }}</a>
                   {% else %}
                     <a href="?page={{ i }}" class="btn btn--small btn--without-border">{{ i }}</a>
@@ -159,5 +159,12 @@
 
       </div>
     </section>
+<script>
+  window.onload = function() {
+    window.scrollTo(0, document.querySelector('#help').offsetTop);
+  }
 
+
+
+</script>
 {% endblock %}
