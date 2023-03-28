@@ -33,11 +33,14 @@
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
         <form class="form-donation" action="form-confirmation.html" method="post">
+
             <!-- STEP 1: class .active is switching steps -->
             <div data-step="1" class="active">
               <h3>Zaznacz co chcesz oddać:</h3>
-              <div class="form-group form-group--checkbox" id="category-checkbox">
-              </div>
+<div class="form-group form-group--radio" id="categories-radio">
+    <label for="{{ form.categories.id_for_label }}">Wybierz kategorię:</label>
+    {{ form.categories }}
+</div>
               <div class="form-group form-group--buttons">
                 <button type="button" class="btn next-step">Dalej</button>
               </div>
@@ -48,7 +51,7 @@
               <div class="form-group form-group--inline">
                 <label>
                   Liczba 60l worków:
-                  <input type="number" name="bags" step="1" min="1" />
+                    {{ form.quantity }}
                 </label>
               </div>
               <div class="form-group form-group--buttons">
@@ -60,7 +63,9 @@
           <!-- STEP 3 -->
           <div data-step="3">
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
-            <div class="form-group form-group--checkbox" id="institution-checkbox">
+            <div class="form-group form-group--radio" id="institution-radio">
+                <label for="{{ form.institution.id_for_label }}">Wybierz organizację:</label>
+                {{ form.institution }}
             </div>
               <div class="form-group form-group--buttons">
                 <button type="button" class="btn prev-step">Wstecz</button>
@@ -71,27 +76,26 @@
             <!-- STEP 4 -->
             <div data-step="4">
                 <h3>Podaj adres oraz termin odbioru rzeczy przez kuriera:</h3>
-
                 <div class="form-section form-section--columns">
                     <div class="form-section--column">
                         <h4>Adres odbioru</h4>
                         <div class="form-group form-group--inline">
-                            <label> Ulica <input type="text" name="address" /> </label>
+                            <label> Ulica {{ form.address }} </label>
                         </div>
 
                         <div class="form-group form-group--inline">
-                            <label> Miasto <input type="text" name="city" /> </label>
+                            <label> Miasto {{ form.city }}</label>
                         </div>
 
                         <div class="form-group form-group--inline">
                             <label>
-                                Kod pocztowy <input type="text" name="zip_code" />
+                                Kod pocztowy {{ form.zip_code }}
                             </label>
                         </div>
 
                         <div class="form-group form-group--inline">
                             <label>
-                                Numer telefonu <input type="phone" name="phone_number" />
+                                Numer telefonu {{ form.phone_number }}
                             </label>
                         </div>
                     </div>
@@ -99,17 +103,17 @@
                     <div class="form-section--column">
                         <h4>Termin odbioru</h4>
                         <div class="form-group form-group--inline">
-                            <label> Data <input type="date" name="pick_up_date" /> </label>
+                            <label> Data {{ form.pick_up_date }} </label>
                         </div>
 
                         <div class="form-group form-group--inline">
-                            <label> Godzina <input type="time" name="pick_up_time" /> </label>
+                            <label> Godzina {{ form.pick_up_time }} </label>
                         </div>
 
                         <div class="form-group form-group--inline">
                             <label>
                                 Uwagi dla kuriera
-                                <textarea name="pick_up_comment" rows="5"></textarea>
+                                {{ form.pick_up_comment }}
                             </label>
                         </div>
                     </div>
@@ -213,6 +217,20 @@
             }
         });
 
+        $('.next-step').click(function() {
+    var data = {
+        categories: $('input[name="categories"]:checked').val(),
+        institution: $('input[name="institution"]:checked').val(),
+    };
+    $.ajax({
+        type: "POST",
+        url: "http://127.0.0.1:8000/orm-confirmation/",
+        data: data,
+        success: function(data) {
+            // obsługa odpowiedzi serwera
+        }
+    });
+});
         </script>
 {% endblock %}
   </body>

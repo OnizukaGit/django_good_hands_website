@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import CreateView, RedirectView, ListView
 from website.models import Donation, Institution, Category
 from django.db.models import Sum
 from django.core.paginator import Paginator
 from django.urls import reverse_lazy
-from website.forms import RegisterForm, LoginForm
+from website.forms import RegisterForm, LoginForm, DonationForm
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from rest_framework import generics
@@ -66,12 +66,40 @@ class UserPanel(ListView):
         return queryset.filter(username=self.request.user.username)
 
 
-class AddDonation(View):
-    def get(self, request):
-        categories = Category.objects.all()
-        institutions = Institution.objects.all()
-        return render(request, "website/form.html", context={"categories": categories, "institutions": institutions})
+# class AddDonation(View):
+#     form_class = DonationForm
+#     template_name = "website/form.html"
+#
+#     def get(self, request):
+#         categories = Category.objects.all()
+#         institutions = Institution.objects.all()
+#         return render(request, "website/form.html", context={"categories": categories, "institutions": institutions})
 
+# class AddDonation(View):
+#     form_class = DonationForm
+#     template_name = 'website/form.html'
+#
+#     def get(self, request):
+#          categories = Category.objects.all()
+#          institutions = Institution.objects.all()
+#          return render(request, "website/form.html", context={"categories": categories, "institutions": institutions})
+#
+#     def post(self, request):
+#         form = self.form_class(request.POST)
+#         if form.is_valid():
+#             donation = form.save(commit=False)
+#             donation.user = request.user
+#             donation.save()
+#
+#             return redirect('form-confirmation')
+#
+#         return render(request, self.template_name, {'form': form})
+
+#
+class AddDonation(CreateView):
+    template_name = "website/form.html"
+    success_url = reverse_lazy('form-confirmation')
+    form_class = DonationForm
 
 class FormConfirmation(View):
     def get(self, request):
@@ -112,7 +140,7 @@ class Register(CreateView):
         return response
 
 
-class MyProfile(View):
-    def get(self, request):
-        return render(request, 'website/my_profile.html')
+# class MyProfile(View):
+#     def get(self, request):
+#         return render(request, 'website/my_profile.html')
 

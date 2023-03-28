@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
-
+from website.models import Donation
 
 User = get_user_model()
 
@@ -33,7 +33,7 @@ class RegisterForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Ten mail jest już w bazie")
         return email
-
+# class AddDonation(View):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.username = self.cleaned_data['email']
@@ -46,3 +46,25 @@ class RegisterForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Nazwa użytkownika", max_length=254)
     password = forms.CharField(label="Hasło", widget=forms.PasswordInput)
+
+
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model = Donation
+        fields = [
+            'quantity',
+            'categories',
+            'institution',
+            'address',
+            'phone_number',
+            'city',
+            'zip_code',
+            'pick_up_date',
+            'pick_up_time',
+            'pick_up_comment',
+        ]
+        widgets = {
+            'categories': forms.CheckboxSelectMultiple(),
+            'pick_up_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'pick_up_time': forms.TimeInput(attrs={'type': 'time'}),
+        }
