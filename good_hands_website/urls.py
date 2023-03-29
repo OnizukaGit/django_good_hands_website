@@ -16,19 +16,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from website.views import LandingPage, AddDonation, FormConfirmation, Login, Register,\
-                            Logout, CategoriesView, DonationView, InstitutionView, UserPanel
+                            Logout, CategoriesView, DonationView, InstitutionView, UserPanel,\
+                            ListUsers, UpdateUsers
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPage.as_view(), name="index"),
     path('form/', AddDonation.as_view(), name="form"),
     path('form-confirmation', FormConfirmation.as_view(), name="form-confirmation"),
-    path('profile/', UserPanel.as_view(), name="UsersPanel"),
+    path('profile/', UserPanel.as_view(), name="user-panel"),
 
     path('register/', Register.as_view(), name="register"),
     path('login/', Login.as_view(), name="login"),
     path('logout/', Logout.as_view(), name="logout"),
 
+    path('list-users/', ListUsers.as_view(), name="list-users"),
+    path('update-user/<int:pk>', UpdateUsers.as_view(), name='update-user'),
 
     path('categories/<int:pk>', CategoriesView.as_view(), name="category-serializer"),
     path('donation/<int:pk>', DonationView.as_view(), name="category-serializer"),

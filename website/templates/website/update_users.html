@@ -19,10 +19,10 @@
 
         <ul class="nav--actions">
           <li class="logged-user">
-            Witaj {{ user }}
+            Witaj {{ user.first_name   }}
             <ul class="dropdown">
-              <li><a href="{% url 'user-panel' %}">Profil</a></li>
-              <li><a href="{% url 'list-users' %}">Ustawienia</a></li>
+              <li><a href="#">Profil</a></li>
+              <li><a href="#">Ustawienia</a></li>
                 {% if user.is_superuser %}
               <li><a href="admin/">Panel Admina</a></li>
                     {% endif %}
@@ -53,57 +53,21 @@
         </ul>
       </nav>
 
-      <div class="slogan container container--90">
-        <div class="slogan--item">
-          <h1>
-            Zacznij pomagać!<br />
-            Oddaj niechciane rzeczy w zaufane ręce
-          </h1>
-        </div>
-      </div>
+<div class="slogan container container--90">
+  <div class="slogan--item">
+
+<form action="" method="post">
+    {% csrf_token %}
+    Nick: {{ form.username }}
+    Imię: {{ form.first_name }}
+    Nazwisko: {{ form.last_name }}
+    Czy nadać ADMIN: {{ form.is_superuser }}
+    <button type="submit">Zapisz</button>
+</form>
+
+
+  </div>
+</div>
     </header>
-
-
-
-{% block content %}
- {% csrf_token %}
-
-{% endblock %}
-            <footer>
-      <div class="contact">
-        <h2>Skontaktuj się z nami</h2>
-        <h3>Formularz kontaktowy</h3>
-        <form class="form--contact">
-          <div class="form-group form-group--50">
-            <input type="text" name="name" placeholder="Imię" />
-          </div>
-          <div class="form-group form-group--50">
-            <input type="text" name="surname" placeholder="Nazwisko" />
-          </div>
-
-          <div class="form-group">
-            <textarea
-              name="message"
-              placeholder="Wiadomość"
-              rows="1"
-            ></textarea>
-          </div>
-
-          <button class="btn" type="submit">Wyślij</button>
-        </form>
-      </div>
-      <div class="bottom-line">
-        <span class="bottom-line--copy">Copyright &copy; 2018</span>
-        <div class="bottom-line--icons">
-          <a href="#" class="btn btn--small"
-            ><img src="{% static "images/icon-facebook.svg" %}"
-          /></a>
-          <a href="#" class="btn btn--small"
-            ><img src="{% static "images/icon-instagram.svg" %}"
-          /></a>
-        </div>
-      </div>
-    </footer>
-<script src="{% static "js/app.js" %}"></script>
 </body>
 </html>

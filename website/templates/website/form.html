@@ -33,9 +33,10 @@
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
         <form class="form-donation" action="form-confirmation.html" method="post">
-
             <!-- STEP 1: class .active is switching steps -->
+             {% csrf_token %}
             <div data-step="1" class="active">
+
               <h3>Zaznacz co chcesz oddać:</h3>
 <div class="form-group form-group--radio" id="categories-radio">
     <label for="{{ form.categories.id_for_label }}">Wybierz kategorię:</label>
@@ -217,6 +218,14 @@
             }
         });
 
+        $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+            xhr.setRequestHeader("X-CSRFToken", $("[name=csrfmiddlewaretoken]").val());
+        }
+    }
+});
+
         $('.next-step').click(function() {
     var data = {
         categories: $('input[name="categories"]:checked').val(),
@@ -224,10 +233,9 @@
     };
     $.ajax({
         type: "POST",
-        url: "http://127.0.0.1:8000/orm-confirmation/",
+        url: "http://localhost:8000",
         data: data,
         success: function(data) {
-            // obsługa odpowiedzi serwera
         }
     });
 });
