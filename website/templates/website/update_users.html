@@ -1,61 +1,10 @@
+{% extends "basic.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static "css/style.css" %}" />
-  </head>
-<body>
-
-
-        <header class="header--main-page">
-      <nav class="container container--70">
-
-{% if user.is_authenticated %}
-
-
-        <ul class="nav--actions">
-          <li class="logged-user">
-            Witaj {{ user.first_name   }}
-            <ul class="dropdown">
-              <li><a href="#">Profil</a></li>
-              <li><a href="#">Ustawienia</a></li>
-                {% if user.is_superuser %}
-              <li><a href="admin/">Panel Admina</a></li>
-                    {% endif %}
-              <li><a href="{% url 'logout' %}">Wyloguj</a></li>
-            </ul>
-          </li>
-        </ul>
-{% else %}
-    <ul class="nav--actions">
-        <li><a href="{% url 'login' %}#login" class="btn btn--small btn--without-border">Zaloguj</a></li>
-        <li><a href="{% url 'register' %}#register" class="btn btn--small btn--highlighted">Załóż konto</a></li>
-    </ul>
-{% endif %}
-
-        <ul>
-          <li><a href="{% url 'index' %}" class="btn btn--without-border active">Start</a></li>
-          <li><a href="{% url 'index' %}#steps" class="btn btn--without-border">O co chodzi?</a></li>
-          <li><a href="{% url 'index' %}#about-us" class="btn btn--without-border">O nas</a></li>
-          <li><a href="{% url 'index' %}#help" class="btn btn--without-border">Fundacje i organizacje</a></li>
-            {% if user.is_authenticated %}
-          <li><a href="{% url 'form' %}#form" class="btn btn--without-border">Przekaż dary</a></li>
-
-                {% else %}
-          <li><a href="{% url 'login' %}#login" class="btn btn--without-border">Przekaż dary</a></li>
-
-            {% endif %}
-          <li><a href="{% url 'index' %}#contact" class="btn btn--without-border">Kontakt</a></li>
-        </ul>
-      </nav>
+{% block one %}
 
 <div class="slogan container container--90">
   <div class="slogan--item">
-
+<div class="form--update">
 <form action="" method="post">
     {% csrf_token %}
     Nick: {{ form.username }}
@@ -64,10 +13,44 @@
     Czy nadać ADMIN: {{ form.is_superuser }}
     <button type="submit">Zapisz</button>
 </form>
+    </div>
+<style>
+.form--update {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 20px;
+  padding: 100px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 500px;
+  margin-left: 20%;
+}
 
+label {
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="checkbox"] {
+  padding: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+</style>
 
   </div>
 </div>
-    </header>
-</body>
-</html>
+{% endblock %}

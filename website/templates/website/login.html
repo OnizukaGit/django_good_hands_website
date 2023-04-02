@@ -1,8 +1,6 @@
 {% extends "basic.html" %}
 {% load static %}
 
-
-  <body>
   {% block content %}
 
     <section id="login" class="login-page">
@@ -17,7 +15,31 @@
         </div>
       </form>
     </section>
+      <style>
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 20px;
+  padding: 100px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 500px;
 
-  </body>
-</html>
+}
+
+label {
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="checkbox"] {
+  padding: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+</style>
 {% endblock %}

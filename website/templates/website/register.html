@@ -1,28 +1,45 @@
 {% extends "basic.html" %}
 {% load static %}
-
-  <body>
   {% block content %}
 
     <section id="register" class="login-page">
       <h2>Załóż konto</h2>
 <form action="" method="post">
     {% csrf_token %}
-        <div class="form-group">
-{{ form.as_p }}
+    {{ form }}
 
-        </div>
-            <div class="form-group">
-
-        </div>
-
-            <div class="form-group form-group--buttons">
-          <a href="{% url 'login' %}#login" class="btn btn--without-border">Zaloguj się</a>
-          <button class="btn" type="submit">Załóż konto</button>
-        </div>
+     <div class="form-group form-group--buttons">
+     <a href="{% url 'login' %}#login" class="btn btn--without-border">Zaloguj się</a>
+     <button class="btn" type="submit">Załóż konto</button>
+     </div>
 </form>
+<style>
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 20px;
+  padding: 100px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 500px;
 
+}
+
+label {
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="checkbox"] {
+  padding: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+</style>
     </section>
-  </body>
-</html>
+
 {% endblock %}
