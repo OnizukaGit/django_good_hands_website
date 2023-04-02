@@ -34,13 +34,13 @@ class RegisterForm(UserCreationForm):
             raise forms.ValidationError("Ten mail jest już w bazie")
         return email
 # class AddDonation(View):
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.username = self.cleaned_data['email']
-        user.email = self.cleaned_data['email']
-        if commit:
-            user.save()
-        return user
+#     def save(self, commit=True):
+#         user = super().save(commit=False)
+#         user.username = self.cleaned_data['email']
+#         user.email = self.cleaned_data['email']
+#         if commit:
+#             user.save()
+#         return user
 
 
 class LoginForm(AuthenticationForm):
@@ -67,4 +67,14 @@ class DonationForm(forms.ModelForm):
             'categories': forms.CheckboxSelectMultiple(),
             'pick_up_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'pick_up_time': forms.TimeInput(attrs={'type': 'time'}),
+        }
+
+
+class ResetPasswordForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['email']
+        labels = {
+            'email': "Wpisz swój email"
         }

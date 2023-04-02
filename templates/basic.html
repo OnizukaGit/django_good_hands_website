@@ -69,6 +69,7 @@
  {% csrf_token %}
 
 {% endblock %}
+        {% block help %}
             <footer>
       <div class="contact">
         <h2>Skontaktuj się z nami</h2>
@@ -104,6 +105,7 @@
         </div>
       </div>
     </footer>
+        {% endblock %}
 <script src="{% static "js/app.js" %}"></script>
 </body>
 </html>

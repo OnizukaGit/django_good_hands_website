@@ -5,9 +5,10 @@ from website.models import Donation, Institution, Category
 from django.db.models import Sum
 from django.core.paginator import Paginator
 from django.urls import reverse_lazy
-from website.forms import RegisterForm, LoginForm, DonationForm
+from website.forms import RegisterForm, LoginForm, DonationForm, ResetPasswordForm
 from django.contrib.auth import logout
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
+    PasswordResetCompleteView
 from rest_framework import generics
 from .serializers import DonationSerializer, CategorySerializer, InstitutionSerializer
 from django.contrib.auth.models import User
@@ -36,8 +37,8 @@ class LandingPage(View):
             "institution_quantity": institution_quantity,
             "total_quantity": total_quantity,
             "institution_page_one": institution_page_one,
-            "institution_page_two" : institution_page_two,
-            "institution_page_three" : institution_page_three,
+            "institution_page_two": institution_page_two,
+            "institution_page_three": institution_page_three,
         })
 
 
@@ -129,3 +130,19 @@ class UpdateUsers(UpdateView):
 
     def test_func(self):
         return self.request.user.is_superuser
+
+
+class ResetPassword(PasswordResetView):
+    template_name = 'website/reset_password.html'
+
+
+class PasswordResetDone(PasswordResetDoneView):
+    template_name = 'website/password_reset_done.html'
+
+
+class PasswordResetConfirm(PasswordResetConfirmView):
+    template_name = 'website/password_reset_complete.html'
+
+
+class PasswordResetComplete(PasswordResetCompleteView):
+    template_name = 'website/password_reset_done.html'
