@@ -1,10 +1,15 @@
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
+from django.template import loader
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.views import View
 from django.views.generic import CreateView, RedirectView, ListView, DeleteView, UpdateView, DetailView
 from website.models import Donation, Institution, Category
 from django.db.models import Sum
 from django.core.paginator import Paginator
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from website.forms import RegisterForm, LoginForm, DonationForm, ResetPasswordForm
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
@@ -134,6 +139,38 @@ class UpdateUsers(UpdateView):
 
 class ResetPassword(PasswordResetView):
     template_name = 'website/reset_password.html'
+    email_template_name = 'website/password_reset_email.html' # nowy szablon e-mail
+    success_url = reverse_lazy('password_reset_done') # musisz zdefiniować URL do success_url
+
+    def send_mail(self, email, html_content, subject):
+        msg = EmailMultiAlternatives(
+            subject=subject, from_email=settings.EMAIL_FROM, to=[email]
+        )
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        user = User.objects.filter(email=email).first()
+        if user is not None:
+            current_site = get_current_site(self.request)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            reset_url = reverse(
+                'password_reset_confirm', args=[uid, token]
+            )
+            reset_url = f"https://{current_site.domain}{reset_url}"
+            context = {
+                'user': user,
+                'reset_url': reset_url,
+                'current_site': current_site,
+            }
+            subject = 'Resetuj hasło'
+            body = loader.render_to_string(
+                self.email_template_name, context=context
+            )
+            self.send_mail(email, body, subject)
+        return super().form_valid(form)
 
 
 class PasswordResetDone(PasswordResetDoneView):
