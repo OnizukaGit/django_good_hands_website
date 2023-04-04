@@ -68,13 +68,3 @@ class DonationForm(forms.ModelForm):
             'pick_up_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'pick_up_time': forms.TimeInput(attrs={'type': 'time'}),
         }
-
-
-class ResetPasswordForm(forms.ModelForm):
-
-    class Meta:
-        model = User
-        fields = ['email']
-        labels = {
-            'email': "Wpisz swój email"
-        }

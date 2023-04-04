@@ -18,8 +18,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path, re_path
 from website.views import LandingPage, AddDonation, FormConfirmation, Login, Register,\
                             Logout, CategoriesView, DonationView, InstitutionView, UserPanel,\
-                            ListUsers, UpdateUsers, ResetPassword, PasswordResetDone, PasswordResetConfirm, \
-                            PasswordResetComplete
+                            ListUsers, UpdateUsers, PasswordReset
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,10 +31,16 @@ urlpatterns = [
     path('login/', Login.as_view(), name="login"),
     path('logout/', Logout.as_view(), name="logout"),
 
-    path('reset-password/', ResetPassword.as_view(), name='reset_password'),
-    path('reset-password-sent/', PasswordResetDone.as_view(), name="password_reset_done"),
-    path('reset/<uid64>/<token>/', PasswordResetConfirm.as_view(), name="password_reset_confirm"),
-    path('reset-password-complete/,', PasswordResetComplete.as_view(), name="password_reset_complete"),
+    path('reset-password-sent/',
+         auth_views.PasswordResetDoneView.as_view(template_name="website/password_reset_done.html"),
+         name="password_reset_done"),
+    path('reset/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(template_name="website/password_reset_confirm.html"),
+         name="password_reset_confirm"),
+    path('reset-password-complete/',
+         auth_views.PasswordResetCompleteView.as_view(template_name="website/password_reset_complete.html"),
+         name="password_reset_complete"),
+    path('password-reset/', PasswordReset.as_view(), name="password_reset"),
 
     path('list-users/', ListUsers.as_view(), name="list-users"),
     path('update-user/<int:pk>', UpdateUsers.as_view(), name='update-user'),

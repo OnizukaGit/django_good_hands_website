@@ -1,23 +1,30 @@
-from django.contrib.auth.tokens import default_token_generator
+from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.template import loader
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 from django.views import View
 from django.views.generic import CreateView, RedirectView, ListView, DeleteView, UpdateView, DetailView
 from website.models import Donation, Institution, Category
 from django.db.models import Sum
 from django.core.paginator import Paginator
 from django.urls import reverse_lazy, reverse
-from website.forms import RegisterForm, LoginForm, DonationForm, ResetPasswordForm
+from website.forms import RegisterForm, LoginForm, DonationForm
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
     PasswordResetCompleteView
 from rest_framework import generics
 from .serializers import DonationSerializer, CategorySerializer, InstitutionSerializer
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse
+from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
-
+from django.template.loader import render_to_string
+from django.db.models.query_utils import Q
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from good_hands_website import settings
 
 class LandingPage(View):
     def get(self, request):
@@ -137,49 +144,39 @@ class UpdateUsers(UpdateView):
         return self.request.user.is_superuser
 
 
-class ResetPassword(PasswordResetView):
-    template_name = 'website/reset_password.html'
-    email_template_name = 'website/password_reset_email.html' # nowy szablon e-mail
-    success_url = reverse_lazy('password_reset_done') # musisz zdefiniować URL do success_url
+class PasswordReset(View):
+    def get(self, request):
+        password_reset_form = PasswordResetForm()
+        return render(request=request, template_name="website/reset_password.html",
+                      context={"password_reset_form": password_reset_form})
 
-    def send_mail(self, email, html_content, subject):
-        msg = EmailMultiAlternatives(
-            subject=subject, from_email=settings.EMAIL_FROM, to=[email]
-        )
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
+    def post(self, request):
+        if request.method == "POST":
+            password_reset_form = PasswordResetForm(request.POST)
+            if password_reset_form.is_valid():
+                data = password_reset_form.cleaned_data['email']
+                associated_users = User.objects.filter(Q(email=data))
+                if associated_users.exists():
+                    for user in associated_users:
+                        subject = "Password Reset Requested"
+                        email_template_name = "website/password_reset_email.txt"
+                        c = {
+                            "email": user.email,
+                            'domain': '127.0.0.1:8000',
+                            'site_name': 'website',
+                            "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                            'token': default_token_generator.make_token(user),
+                            'protocol': 'http',
+                            'user_email': user.email,
+                        }
+                        email = render_to_string(email_template_name, c)
+                        try:
+                            send_mail(subject, email,settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+                        except BadHeaderError:
+                            return HttpResponse('Invalid header found.')
+                        messages.success(request,
+                                         'A message with reset password instructions has been sent to your inbox.')
+                        return redirect("password_reset_done")
+                messages.error(request, 'An invalid email has been entered.')
+        return render(request=request, template_name="website/password_reset_done.html")
 
-    def form_valid(self, form):
-        email = form.cleaned_data['email']
-        user = User.objects.filter(email=email).first()
-        if user is not None:
-            current_site = get_current_site(self.request)
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            token = default_token_generator.make_token(user)
-            reset_url = reverse(
-                'password_reset_confirm', args=[uid, token]
-            )
-            reset_url = f"https://{current_site.domain}{reset_url}"
-            context = {
-                'user': user,
-                'reset_url': reset_url,
-                'current_site': current_site,
-            }
-            subject = 'Resetuj hasło'
-            body = loader.render_to_string(
-                self.email_template_name, context=context
-            )
-            self.send_mail(email, body, subject)
-        return super().form_valid(form)
-
-
-class PasswordResetDone(PasswordResetDoneView):
-    template_name = 'website/password_reset_done.html'
-
-
-class PasswordResetConfirm(PasswordResetConfirmView):
-    template_name = 'website/password_reset_complete.html'
-
-
-class PasswordResetComplete(PasswordResetCompleteView):
-    template_name = 'website/password_reset_done.html'
