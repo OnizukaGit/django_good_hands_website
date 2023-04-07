@@ -33,19 +33,15 @@ class RegisterForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Ten mail jest już w bazie")
         return email
-# class AddDonation(View):
-#     def save(self, commit=True):
-#         user = super().save(commit=False)
-#         user.username = self.cleaned_data['email']
-#         user.email = self.cleaned_data['email']
-#         if commit:
-#             user.save()
-#         return user
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(label="Nazwa użytkownika", max_length=254)
+    username = forms.EmailField(label="Email", max_length=254)
     password = forms.CharField(label="Hasło", widget=forms.PasswordInput)
+
+    error_messages = {
+        'invalid_login': "Nieprawidłowy adres e-mail"
+    }
 
 
 class DonationForm(forms.ModelForm):

@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 
 
 class Category(models.Model):
@@ -51,4 +51,6 @@ class Donation(models.Model):
     pick_up_comment = models.CharField(max_length=128)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
-
+#
+# class CustomUser(AbstractUser):
+#     email = models.EmailField(unique=True)

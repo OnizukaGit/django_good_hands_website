@@ -1,17 +1,13 @@
 from django.contrib import messages
-from django.contrib.sites.shortcuts import get_current_site
-from django.shortcuts import render, redirect
-from django.template import loader
 from django.views import View
-from django.views.generic import CreateView, RedirectView, ListView, DeleteView, UpdateView, DetailView
+from django.views.generic import CreateView, RedirectView, ListView, UpdateView
 from website.models import Donation, Institution, Category
 from django.db.models import Sum
 from django.core.paginator import Paginator
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from website.forms import RegisterForm, LoginForm, DonationForm
 from django.contrib.auth import logout
-from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
-    PasswordResetCompleteView
+from django.contrib.auth.views import LoginView
 from rest_framework import generics
 from .serializers import DonationSerializer, CategorySerializer, InstitutionSerializer
 from django.shortcuts import render, redirect
@@ -171,11 +167,9 @@ class PasswordReset(View):
                         }
                         email = render_to_string(email_template_name, c)
                         try:
-                            send_mail(subject, email,settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+                            send_mail(subject, email, "admin@wp.pl", [user.email], fail_silently=False)
                         except BadHeaderError:
                             return HttpResponse('Invalid header found.')
-                        messages.success(request,
-                                         'A message with reset password instructions has been sent to your inbox.')
                         return redirect("password_reset_done")
                 messages.error(request, 'An invalid email has been entered.')
         return render(request=request, template_name="website/password_reset_done.html")
