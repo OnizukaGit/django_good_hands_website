@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'website.apps.WebsiteConfig',
     'good_hands_website',
     'rest_framework',
+    'captcha',
 ]
 
 MIDDLEWARE = [

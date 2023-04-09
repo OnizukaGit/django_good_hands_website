@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.urls import path, re_path
+from django.urls import path
+from django.conf.urls import include
+from captcha.views import captcha_refresh
 from website.views import LandingPage, AddDonation, FormConfirmation, Login, Register,\
                             Logout, CategoriesView, DonationView, InstitutionView, UserPanel,\
                             ListUsers, UpdateUsers, PasswordReset
@@ -27,9 +29,13 @@ urlpatterns = [
     path('form-confirmation', FormConfirmation.as_view(), name="form-confirmation"),
     path('profile/', UserPanel.as_view(), name="user-panel"),
 
+
+
     path('register/', Register.as_view(), name="register"),
     path('login/', Login.as_view(), name="login"),
     path('logout/', Logout.as_view(), name="logout"),
+
+
 
     path('reset-password-sent/',
          auth_views.PasswordResetDoneView.as_view(template_name="website/password_reset_done.html"),
@@ -42,10 +48,18 @@ urlpatterns = [
          name="password_reset_complete"),
     path('password-reset/', PasswordReset.as_view(), name="password_reset"),
 
+
+
     path('list-users/', ListUsers.as_view(), name="list-users"),
     path('update-user/<int:pk>', UpdateUsers.as_view(), name='update-user'),
+
+
 
     path('categories/<int:pk>', CategoriesView.as_view(), name="category-serializer"),
     path('donation/<int:pk>', DonationView.as_view(), name="category-serializer"),
     path('institution/<int:pk>', InstitutionView.as_view(), name="category-serializer"),
+
+
+    path(r'^captcha/', include('captcha.urls')),
+    path(r'^captcha/refresh/$', captcha_refresh, name='captcha-refresh'),
 ]

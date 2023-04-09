@@ -154,7 +154,7 @@ class PasswordReset(View):
                 associated_users = User.objects.filter(Q(email=data))
                 if associated_users.exists():
                     for user in associated_users:
-                        subject = "Password Reset Requested"
+                        subject = "Resetowanie Hasla"
                         email_template_name = "website/password_reset_email.txt"
                         c = {
                             "email": user.email,
@@ -167,7 +167,7 @@ class PasswordReset(View):
                         }
                         email = render_to_string(email_template_name, c)
                         try:
-                            send_mail(subject, email, "admin@wp.pl", [user.email], fail_silently=False)
+                            send_mail(subject, email, "resethasla@admin.com", [user.email], fail_silently=False)
                         except BadHeaderError:
                             return HttpResponse('Invalid header found.')
                         return redirect("password_reset_done")
