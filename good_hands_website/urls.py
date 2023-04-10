@@ -60,6 +60,6 @@ urlpatterns = [
     path('institution/<int:pk>', InstitutionView.as_view(), name="category-serializer"),
 
 
-    path(r'^captcha/', include('captcha.urls')),
-    path(r'^captcha/refresh/$', captcha_refresh, name='captcha-refresh'),
+    path(r'captcha/', include('captcha.urls')),
+    path(r'captcha/refresh/', captcha_refresh, name='captcha-refresh'),
 ]

@@ -5,15 +5,17 @@
 
     <section id="login" class="login-page">
       <h2>Zaloguj się</h2>
+      <div class="captcha">
       <form action="" method="post">
           {% csrf_token %}
-          {{ form }}
-
-        <div class="form-group form-group--buttons">
+        {{ form }}
+      <button type="button" onclick="refresh_captcha()">Odśwież</button>
+           <div class="form-group form-group--buttons">
           <a href="{% url 'password_reset' %}#reset" class="btn btn--without-border">Nie pamiętasz hasła?</a>
           <a href="{% url 'register' %}#register" class="btn btn--without-border">Załóż konto</a>
-          <button class="btn" type="submit">Zaloguj się</button> 
+          <button class="btn" type="submit">Zaloguj się</button>
         </div>
+      </div>
       </form>
     </section>
       <style>
@@ -43,4 +45,13 @@ input[type="checkbox"] {
 }
 
 </style>
+  <script>
+    function refresh_captcha() {
+      var captcha = document.querySelector('.captcha img');
+      var new_src = captcha.getAttribute('src').split('?')[0] + '?' + new Date().getTime();
+      captcha.setAttribute('src', new_src);
+      window.location.href = '#login';
+      window.location.reload();
+    }
+  </script>
 {% endblock %}

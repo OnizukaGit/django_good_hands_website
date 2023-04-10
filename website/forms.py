@@ -1,4 +1,4 @@
-from captcha.fields import CaptchaField
+from captcha.fields import CaptchaField, CaptchaTextInput
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
@@ -40,10 +40,11 @@ class LoginForm(AuthenticationForm):
     username = forms.EmailField(label="Email", max_length=254)
     password = forms.CharField(label="Hasło", widget=forms.PasswordInput)
 
-    captcha = CaptchaField()
     error_messages = {
         'invalid_login': "Nieprawidłowy adres e-mail"
     }
+
+    captcha = CaptchaField()
 
 
 class DonationForm(forms.ModelForm):
