@@ -1,6 +1,9 @@
 {% extends "basic.html" %}
 {% load static %}
+{% block one %}
+      <div class="slogan container container--90">
 
+{% endblock %}
   {% block content %}
 
     <section id="login" class="login-page">
@@ -15,8 +18,8 @@
           <a href="{% url 'register' %}#register" class="btn btn--without-border">Załóż konto</a>
           <button class="btn" type="submit">Zaloguj się</button>
         </div>
-      </div>
       </form>
+    </div>
     </section>
       <style>
 form {
@@ -54,4 +57,5 @@ input[type="checkbox"] {
       window.location.reload();
     }
   </script>
+      {% block help %}{% endblock %}
 {% endblock %}
