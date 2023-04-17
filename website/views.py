@@ -174,4 +174,3 @@ class PasswordReset(View):
                 messages.error(request, 'An invalid email has been entered.')
         return render(request=request, template_name="website/password_reset_done.html")
 
-
